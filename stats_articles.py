@@ -112,8 +112,6 @@ for annee in range(2009, 2019):
     dict_occur = {}
     dict_occur_global = {}
     for mot in voc_det_sa:
-    #for mot in ["agriculture", "sécurité alimentaire", "riz", "pauvreté", "malnutrition", "pluie", "intrant", "foncier",
-    #            "semence", "fruit", "élevage", "céréale", "maïs", "faim", "campagne agricole"]:
          tf = (data_journ[(data_journ.SIM_W2V>x) & (data_journ.ANNEE == annee)].VOC_SA.str.lower().str.count(mot.lower()) /
                data_journ[(data_journ.SIM_W2V > x) & (data_journ.ANNEE == annee)].NB_MOTS) # fréq relative de mot dans chaque article de l'année "annee"
          nbDocsMot = data_journ[(data_journ.SIM_W2V > x)].VOC_SA.str.lower().str.count(mot.lower())
@@ -216,9 +214,6 @@ for annee in range(2009, 2019):
     dict_occur = {}
     dict_occur_global = {}
     for mot in voc_det_cr:
-    #for mot in ["catastrophe", "conflit", "pauvreté", "insécurité", "malnutrition", "inondation", "foncier", "faim",
-    #            "migration", "crise alimentaire", "attaque", "sécheresse", "déplacement", "vulnérabilité", "tension"]:
-
          tf = (data_journ[(data_journ.SIM_W2V>x) & (data_journ.ANNEE == annee)].VOC_CR.str.lower().str.count(mot.lower()) /
                data_journ[(data_journ.SIM_W2V > x) & (data_journ.ANNEE == annee)].NB_MOTS) # fréq relative de mot dans l'article de l'année "annee"
          nbDocsMot = data_journ[(data_journ.SIM_W2V > x)].VOC_CR.str.lower().str.count(mot.lower())
@@ -229,7 +224,6 @@ for annee in range(2009, 2019):
          tfidf_moy = tfidf.mean()
          dict_occur[mot] = round(tfidf_moy, 6)
     top10_ancr = dict(Counter(dict_occur).most_common(100))
-    #top10_ancr = {k: v for k, v in sorted(top10_ancr.items(), key=lambda item: item[0])}
     data_df = pd.DataFrame(top10_ancr.items(), columns=['MOT', 'FREQUENCE'])
     nomvar = "Exps_" + str(annee)
     nomvar_f = "Freq_" + str(annee)
@@ -341,7 +335,6 @@ for reg in ["Centre", "Sahel", "Bassins"]:
          dict_occur[mot] = round(tfidf_moy, 6)
     top10 = dict(Counter(dict_occur).most_common(100))
     data_df = pd.DataFrame(top10.items(), columns=['MOT', 'FREQUENCE'])
-    # data_df['Exps'] = data_df['MOT'] + " (" + data_df['FREQUENCE'].astype(str) + ")"
     print("Top5 voc SA\n", data_df['MOT'].head())
     data_df['MOT'].to_excel(excel_writer="result_region/top_10_sa_" + reg + ".xlsx", index=False)
     data_cloud = data_df.set_index('MOT').to_dict()['FREQUENCE']
@@ -365,7 +358,6 @@ for reg in ["Centre", "Sahel", "Bassins"]:
         dict_occur[mot] = round(tfidf_moy, 6)
     top10 = dict(Counter(dict_occur).most_common(30))
     data_df = pd.DataFrame(top10.items(), columns=['MOT', 'FREQUENCE'])
-    # data_df['Exps'] = data_df['MOT'] + " (" + data_df['FREQUENCE'].astype(str) + ")"
     print("Top5 voc CR\n", data_df['MOT'].head())
     data_df['MOT'].to_excel(excel_writer="result_region/top_10_cr_" + reg + ".xlsx",index=False)
     data_cloud = data_df.set_index('MOT').to_dict()['FREQUENCE']
@@ -460,117 +452,3 @@ plt.xticks(np.arange(2009, 2019, 1))
 plt.title("Evolution du nombre d'articles de 2009 à 2018")
 plt.grid(True)
 plt.savefig("result_annee/graphe_nb_articles.png")
-
-# Graphe coocurrences sécurité alimentaire
-
-## top cooccurrence  SA
-nb_mots_sa = data_journ[data_journ.SIM_W2V>x].VOC_SA.str.lower().str.count("sécurité alimentaire")
-nb_mots_sa[nb_mots_sa > 1] = 1
-dict_cooccur = {}
-for mot in voc_det_sa:
-    nb_mots = data_journ[data_journ.SIM_W2V>x].VOC_SA.str.lower().str.count(mot.lower())
-    nb_mots[nb_mots > 1] = 1
-    nb_sa_mots = nb_mots_sa + nb_mots
-
-    nb_art_sa = nb_mots_sa[nb_mots_sa == 1].count()
-    nb_art_mot = nb_mots[nb_mots == 1].count()
-    nb_art_sa_mot = nb_sa_mots[nb_sa_mots == 2].count()
-    nb_art = data_journ[data_journ.SIM_W2V>x].shape[0]
-
-    P_sa = nb_art_sa / nb_art
-    P_mot = (nb_art_mot + 1) / nb_art
-    P_sa_mot = nb_art_sa_mot / nb_art
-
-    info_mutuelle = P_sa_mot / (P_sa * P_mot)
-
-    dict_cooccur[mot] = round(info_mutuelle, 1)
-top_sa = dict(Counter(dict_cooccur).most_common(20))
-
-## top cooccurrence  CR
-nb_mots_sa = data_journ[data_journ.SIM_W2V>x].VOC_SA.str.lower().str.count("sécurité alimentaire")
-nb_mots_sa[nb_mots_sa > 1] = 1
-dict_cooccur = {}
-for mot in voc_det_cr:
-    nb_mots = data_journ[data_journ.SIM_W2V>x].VOC_CR.str.lower().str.count(mot.lower())
-    nb_mots[nb_mots > 1] = 1
-    nb_sa_mots = nb_mots_sa + nb_mots
-
-    nb_art_sa = nb_mots_sa[nb_mots_sa == 1].count()
-    nb_art_mot = nb_mots[nb_mots == 1].count()
-    nb_art_sa_mot = nb_sa_mots[nb_sa_mots == 2].count()
-    nb_art = data_journ[data_journ.SIM_W2V>x].shape[0]
-
-    P_sa = nb_art_sa / nb_art
-    P_mot = (nb_art_mot + 1) / nb_art
-    P_sa_mot = nb_art_sa_mot / nb_art
-
-    info_mutuelle = P_sa_mot / (P_sa * P_mot)
-
-    dict_cooccur[mot] = round(info_mutuelle, 1)
-top_cr = dict(Counter(dict_cooccur).most_common(20))
-
-top_tot = {}
-top_tot.update(top_sa)
-top_tot.update(top_cr)
-del top_tot['sécurité alimentaire']
-top_tot = {k: v for k, v in sorted(top_tot.items(), key=lambda item: item[1], reverse=True)}
-top_tot = dict(Counter(top_tot).most_common(10))
-print(top_tot)
-
-# Graphe coocurrences agriculture
-## top cooccurrence  SA
-nb_mots_sa = data_journ[data_journ.SIM_W2V>x].VOC_SA.str.lower().str.count("agriculture")
-nb_mots_sa[nb_mots_sa > 1] = 1
-dict_cooccur = {}
-for mot in voc_det_sa:
-    nb_mots = data_journ[data_journ.SIM_W2V>x].VOC_SA.str.lower().str.count(mot.lower())
-    nb_mots[nb_mots > 1] = 1
-    nb_sa_mots = nb_mots_sa + nb_mots
-
-    nb_art_sa = nb_mots_sa[nb_mots_sa == 1].count()
-    nb_art_mot = nb_mots[nb_mots == 1].count()
-    nb_art_sa_mot = nb_sa_mots[nb_sa_mots == 2].count()
-    nb_art = data_journ[data_journ.SIM_W2V>x].shape[0]
-
-    P_sa = nb_art_sa / nb_art
-    P_mot = (nb_art_mot + 1) / nb_art
-    P_sa_mot = nb_art_sa_mot / nb_art
-
-    info_mutuelle = P_sa_mot / (P_sa * P_mot)
-
-    dict_cooccur[mot] = round(info_mutuelle, 1)
-top_sa = dict(Counter(dict_cooccur).most_common(20))
-
-## top cooccurrence  CR
-nb_mots_sa = data_journ[data_journ.SIM_W2V>x].VOC_SA.str.lower().str.count("agriculture")
-nb_mots_sa[nb_mots_sa > 1] = 1
-dict_cooccur = {}
-for mot in voc_det_cr:
-    nb_mots = data_journ[data_journ.SIM_W2V>x].VOC_CR.str.lower().str.count(mot.lower())
-    nb_mots[nb_mots > 1] = 1
-    nb_sa_mots = nb_mots_sa + nb_mots
-    nb_sa_mots = nb_mots_sa + nb_mots
-
-    nb_art_sa = nb_mots_sa[nb_mots_sa == 1].count()
-    nb_art_mot = nb_mots[nb_mots == 1].count()
-    nb_art_sa_mot = nb_sa_mots[nb_sa_mots == 2].count()
-    nb_art = data_journ[data_journ.SIM_W2V>x].shape[0]
-
-    P_sa = nb_art_sa / nb_art
-    P_mot = (nb_art_mot + 1) / nb_art
-    P_sa_mot = nb_art_sa_mot / nb_art
-
-    info_mutuelle = P_sa_mot / (P_sa * P_mot)
-
-    dict_cooccur[mot] = round(info_mutuelle, 1)
-top_cr = dict(Counter(dict_cooccur).most_common(20))
-
-top_tot = {}
-top_tot.update(top_sa)
-top_tot.update(top_cr)
-del top_tot['agriculture']
-top_tot = {k: v for k, v in sorted(top_tot.items(), key=lambda item: item[1], reverse=True)}
-top_tot = dict(Counter(top_tot).most_common(10))
-print(top_tot)
-
-# afficher avec networkx sur l'autre env.
