@@ -56,7 +56,6 @@ for mot in voc_det_sa:
     dict_occur[mot] = round(nb_mots, 6)
 top10 = dict(Counter(dict_occur).most_common(30))
 data_df = pd.DataFrame(top10.items(), columns=['MOT', 'FREQUENCE'])
-#data_df['Exps'] = data_df['MOT'] + " (" + data_df['FREQUENCE'].astype(str) + ")"
 print("Top5 voc SA\n", data_df['MOT'].head())
 data_df['MOT'].to_excel(excel_writer="result_global/top_10_global_sa.xlsx", index=False)
 
@@ -74,7 +73,6 @@ for mot in voc_det_cr:
     dict_occur[mot] = round(nb_mots, 6)
 top10 = dict(Counter(dict_occur).most_common(30))
 data_df = pd.DataFrame(top10.items(), columns=['MOT', 'FREQUENCE'])
-# data_df['Exps'] = data_df['MOT'] + " (" + data_df['FREQUENCE'].astype(str) + ")"
 print("Top5 voc CR\n", data_df['MOT'].head())
 data_df['MOT'].to_excel(excel_writer="result_global/top_10_global_cr.xlsx",index=False)
 
@@ -122,7 +120,6 @@ for annee in range(2009, 2019):
          tfidf_moy = tfidf.mean()
          dict_occur[mot] = round(tfidf_moy, 6)
     top10_ansa = dict(Counter(dict_occur).most_common(100))
-    #top10_ansa = {k: v for k, v in sorted(top10_ansa.items(), key=lambda item: item[0])}
     data_df = pd.DataFrame(top10_ansa.items(), columns=['MOT', 'FREQUENCE'])
     nomvar = "Exps_" + str(annee)
     nomvar_f = "Freq_" + str(annee)
@@ -183,19 +180,7 @@ for annee in range(2009, 2019):
     values += values[:1]
     ax.plot(angles, values, linewidth=1, linestyle='solid', label="R - " + str(annee))
     ax.fill(angles, values, 'b', alpha=0.1)
-    """
-    # Ind1
-    values = df_radar.iloc[0].values.flatten().tolist()
-    values += values[:1]
-    ax.plot(angles, values, linewidth=1, linestyle='solid', label="tf-idf_" + str(annee))
-    ax.fill(angles, values, 'b', alpha=0.1)
-    
-    # Ind2
-    values = df_radar.iloc[1].values.flatten().tolist()
-    values += values[:1]
-    ax.plot(angles, values, linewidth=1, linestyle='solid', label="tf_idf_oth_years", color="grey")
-    ax.fill(angles, values, 'grey', alpha=0.1)
-    """
+
     # Add legend
     plt.legend(loc='upper right', bbox_to_anchor=(0.2, 0.))
     # Show the graph
@@ -282,19 +267,7 @@ for annee in range(2009, 2019):
     values += values[:1]
     ax.plot(angles, values, linewidth=1, linestyle='solid', label="R - " + str(annee))
     ax.fill(angles, values, 'b', alpha=0.1)
-    """
-    # Ind1
-    values = df_radar.iloc[0].values.flatten().tolist()
-    values += values[:1]
-    ax.plot(angles, values, linewidth=1, linestyle='solid', label="tf-idf_" + str(annee))
-    ax.fill(angles, values, 'b', alpha=0.1)
     
-    # Ind2
-    values = values = df_radar.iloc[1].values.flatten().tolist()
-    values += values[:1]
-    ax.plot(angles, values, linewidth=1, linestyle='solid', label="tf_idf_oth_years", color="grey")
-    ax.fill(angles, values, 'grey', alpha=0.1)
-    """
     # Add legend
     plt.legend(loc='upper right', bbox_to_anchor=(0.2, 0.))
 
